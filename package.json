@@ -1,0 +1,22 @@
+{
+  "name": "sparkle-server",
+  "version": "0.0.0",
+  "description": "Experimental server for sparkle protocol.",
+  "main": "index.js",
+  "scripts": {
+    "test": "tsc && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sparkle-im/sparkle-server"
+  },
+  "private": true,
+  "author": "Edsger Lin",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.3",
+    "mongodb": "^2.1.4",
+    "multer": "^1.1.0"
+  }
+}
