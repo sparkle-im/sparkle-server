@@ -1,16 +1,16 @@
-import express from 'express';
+import mongoose from 'mongoose';
+import app from './app';
+import config from './config';
 class Main {
     static main(args) {
-        var app = express();
-
-        app.get('/', function (req, res) {
-            res.send('Hello World!');
+        mongoose.connection.on('connected', () => {
+            console.log(`mongoose connected to ${config.mongodb}`);
+            // Server should start after database connection established.
+            app.listen(config.port, () => {
+                console.log(`sparkle server listening on port ${config.port}.`);
+            });
         });
-
-        app.listen(3000, function () {
-            console.log('Example app listening on port 3000!');
-        });
-        
+        mongoose.connect(config.mongodb);
     }
 }
 

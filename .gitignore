@@ -78,6 +78,3 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# TypeScript
-typings/
-*.js
