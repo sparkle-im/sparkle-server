@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npm run build && npm run server",
     "build": "babel src -d dist",
-    "server": "node dist/index.js"
+    "server": "node dist/index.js",
+    "lint": "eslint src --ext es6"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,10 @@
   "author": "Edsger Lin",
   "license": "AGPL-3.0",
   "devDependencies": {
-    "babel-preset-es2015-node4": "^2.0.3"
+    "babel-preset-es2015-node4": "^2.0.3",
+    "eslint": "^2.2.0",
+    "eslint-config-airbnb": "^6.0.2",
+    "eslint-plugin-react": "^4.1.0"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
