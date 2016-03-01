@@ -1,4 +1,11 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "files.exclude": {
+		"**/.git": true,
+		"**/.DS_Store": true,
+    "dist": true,
+    "typings": true,
+    "node_modules": true
+	}
 }

@@ -7,7 +7,7 @@ const publicKeySchema = new mongoose.Schema({
 
 publicKeySchema.statics.findByHash = function findByHash(sha256sum) {
   return new Promise((resolve, reject) => {
-    this.findOne({ sha256sum }, { key: 1 }, (err, publicKey) => {
+    this.findOne({ sha256sum }, { key: 1, sha256sum: 1, date: 1 }, (err, publicKey) => {
       if (err) {
         reject(err);
       } else {
