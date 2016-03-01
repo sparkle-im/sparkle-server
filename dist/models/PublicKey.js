@@ -8,6 +8,8 @@ var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
+var _utils = require('../utils');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const publicKeySchema = new _mongoose2.default.Schema({
@@ -15,7 +17,7 @@ const publicKeySchema = new _mongoose2.default.Schema({
     type: String,
     required: true,
     validate: {
-      validator: s => /^[a-f0-9]+$/.test(s),
+      validator: _utils.hexStringValidator,
       message: '{VALUE} is not a valid hexstring!'
     }
   },
@@ -23,7 +25,7 @@ const publicKeySchema = new _mongoose2.default.Schema({
     type: String,
     required: true,
     validate: {
-      validator: s => /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(s),
+      validator: _utils.base64StringValidator,
       message: '{VALUE} is not a valid base64 string!'
     }
   },

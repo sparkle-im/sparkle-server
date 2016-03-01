@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+import { hexStringValidator, base64StringValidator } from '../utils';
 const publicKeySchema = new mongoose.Schema({
   sha256sum: {
     type: String,
     required: true,
     validate: {
-      validator: s => /^[a-f0-9]+$/.test(s),
+      validator: hexStringValidator,
       message: '{VALUE} is not a valid hexstring!'
     }
   },
@@ -12,7 +13,7 @@ const publicKeySchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: s => /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(s),
+      validator: base64StringValidator,
       message: '{VALUE} is not a valid base64 string!'
     }
   },

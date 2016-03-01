@@ -12,11 +12,11 @@ var _PublicKey = require('../models/PublicKey');
 
 var _PublicKey2 = _interopRequireDefault(_PublicKey);
 
+var _utils = require('../utils');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function sha256sum(s) {
-  return _crypto2.default.createHash('sha256').update(s).digest('hex');
-} /* eslint-env node, mocha */
+/* eslint-env node, mocha */
 
 
 describe('PublicKey Model', () => {
@@ -34,7 +34,7 @@ describe('PublicKey Model', () => {
     const testString = new Buffer('test').toString('base64');
     const publicKey = new _PublicKey2.default({
       key: testString,
-      sha256sum: sha256sum(new Buffer(testString, 'base64'))
+      sha256sum: (0, _utils.sha256sum)(new Buffer(testString, 'base64'))
     });
     publicKey.save().then(() => {
       _PublicKey2.default.count({}, (err, count) => {
@@ -60,13 +60,13 @@ describe('PublicKey Model', () => {
       const testString = new Buffer(`test${ i }`).toString('base64');
       new _PublicKey2.default({
         key: testString,
-        sha256sum: sha256sum(new Buffer(testString, 'base64'))
+        sha256sum: (0, _utils.sha256sum)(new Buffer(testString, 'base64'))
       }).save().then(countedDone);
     }
   });
   it('PublicKey creation and retrieval', done => {
     const randomKey = _crypto2.default.randomBytes(1024).toString('base64');
-    const randomKeyHash = sha256sum(new Buffer(randomKey, 'base64'));
+    const randomKeyHash = (0, _utils.sha256sum)(new Buffer(randomKey, 'base64'));
     const publicKey = new _PublicKey2.default({ key: randomKey, sha256sum: randomKeyHash });
     publicKey.save().then(() => {
       _PublicKey2.default.count({}, (err, count) => {

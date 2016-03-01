@@ -2,9 +2,7 @@
 import assert from 'assert';
 import crypto from 'crypto';
 import PublicKey from '../models/PublicKey';
-function sha256sum(s) {
-  return crypto.createHash('sha256').update(s).digest('hex');
-}
+import { sha256sum } from '../utils';
 
 describe('PublicKey Model', () => {
   beforeEach('Clear PublicKey collection', (done) => {
@@ -31,6 +29,7 @@ describe('PublicKey Model', () => {
       });
     }).catch(err => assert.ifError(err));
   });
+
   it('Multiple PublicKey creation', (done) => {
     const TESTCASE_SIZE = 16;
     let completedPromises = 0;
@@ -51,6 +50,7 @@ describe('PublicKey Model', () => {
       })).save().then(countedDone);
     }
   });
+
   it('PublicKey creation and retrieval', (done) => {
     const randomKey = crypto.randomBytes(1024).toString('base64');
     const randomKeyHash = sha256sum(new Buffer(randomKey, 'base64'));
