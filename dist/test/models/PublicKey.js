@@ -8,11 +8,11 @@ var _crypto = require('crypto');
 
 var _crypto2 = _interopRequireDefault(_crypto);
 
-var _PublicKey = require('../models/PublicKey');
+var _PublicKey = require('../../models/PublicKey');
 
 var _PublicKey2 = _interopRequireDefault(_PublicKey);
 
-var _utils = require('../utils');
+var _utils = require('../../utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -44,6 +44,7 @@ describe('PublicKey Model', () => {
       });
     }).catch(err => _assert2.default.ifError(err));
   });
+
   it('Multiple PublicKey creation', done => {
     const TESTCASE_SIZE = 16;
     let completedPromises = 0;
@@ -64,6 +65,7 @@ describe('PublicKey Model', () => {
       }).save().then(countedDone);
     }
   });
+
   it('PublicKey creation and retrieval', done => {
     const randomKey = _crypto2.default.randomBytes(1024).toString('base64');
     const randomKeyHash = (0, _utils.sha256sum)(new Buffer(randomKey, 'base64'));

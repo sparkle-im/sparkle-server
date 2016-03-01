@@ -1,8 +1,8 @@
 /* eslint-env node, mocha */
 import assert from 'assert';
 import crypto from 'crypto';
-import PublicKey from '../models/PublicKey';
-import { sha256sum } from '../utils';
+import PublicKey from '../../models/PublicKey';
+import { sha256sum } from '../../utils';
 
 describe('PublicKey Model', () => {
   beforeEach('Clear PublicKey collection', (done) => {

@@ -1,6 +1,6 @@
 /* eslint-env node, mocha */
 import mongoose from 'mongoose';
-import config from '../config';
+import config from '../../config';
 before('Connect to MongoDB', (done) => {
   mongoose.connect(config.mongodb).then(() => {
     done();
