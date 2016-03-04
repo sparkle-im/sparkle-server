@@ -18,8 +18,7 @@ describe('PublicKey Model', () => {
   it('PublicKey creation', (done) => {
     const testString = (new Buffer('test')).toString('base64');
     const publicKey = new PublicKey({
-      key: testString,
-      sha256sum: sha256sum(new Buffer(testString, 'base64'))
+      key: testString
     });
     publicKey.save().then(() => {
       PublicKey.count({}, (err, count) => {
@@ -45,8 +44,7 @@ describe('PublicKey Model', () => {
     for (let i = 0; i < TESTCASE_SIZE; i++) {
       const testString = (new Buffer(`test${i}`)).toString('base64');
       (new PublicKey({
-        key: testString,
-        sha256sum: sha256sum(new Buffer(testString, 'base64'))
+        key: testString
       })).save().then(countedDone);
     }
   });
@@ -54,7 +52,7 @@ describe('PublicKey Model', () => {
   it('PublicKey creation and retrieval', (done) => {
     const randomKey = crypto.randomBytes(1024).toString('base64');
     const randomKeyHash = sha256sum(new Buffer(randomKey, 'base64'));
-    const publicKey = new PublicKey({ key: randomKey, sha256sum: randomKeyHash });
+    const publicKey = new PublicKey({ key: randomKey });
     publicKey.save().then(() => {
       PublicKey.count({}, (err, count) => {
         assert.ifError(err);
