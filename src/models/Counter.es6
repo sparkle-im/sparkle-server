@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { hexStringValidator, base64StringValidator, sha256sum } from '../utils';
+import { hexStringValidator, base64StringValidator, sha256sum as computeHash } from '../utils';
 const publicKeySchema = new mongoose.Schema({
-  _id: {
+  sha256sum: {
     type: String,
     required: true,
     validate: {
@@ -19,11 +19,23 @@ const publicKeySchema = new mongoose.Schema({
       message: '{VALUE} is not a valid base64 string!'
     },
     set: function keySetter(key) { // sha256sum should be computed automatically on key is set.
-      this._id = sha256sum(new Buffer(key, 'base64'));
+      this.sha256sum = computeHash(new Buffer(key, 'base64'));
       return key;
     }
   }
-}, { timestamps: { createdAt: 'created_at' } });
+}, { id: false, timestamps: { createdAt: 'created_at' } });
+
+publicKeySchema.statics.findByHash = function findByHash(sha256sum) {
+  return new Promise((resolve, reject) => {
+    this.findOne({ sha256sum }, { key: 1, sha256sum: 1, created_at: 1 }, (err, publicKey) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(publicKey);
+      }
+    });
+  });
+};
 
 const PublicKey = mongoose.model('PublicKey', publicKeySchema);
 export default PublicKey;

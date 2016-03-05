@@ -12,7 +12,7 @@ describe('PublicKey Model', () => {
         assert.equal(count, 0);
         done();
       });
-    });
+    }).catch(done);
   });
 
   it('PublicKey creation', (done) => {
@@ -26,7 +26,7 @@ describe('PublicKey Model', () => {
         assert.equal(count, 1);
         done();
       });
-    }).catch(err => assert.ifError(err));
+    }).catch(done);
   });
 
   it('Multiple PublicKey creation', (done) => {
@@ -45,7 +45,7 @@ describe('PublicKey Model', () => {
       const testString = (new Buffer(`test${i}`)).toString('base64');
       (new PublicKey({
         key: testString
-      })).save().then(countedDone);
+      })).save().then(countedDone).catch(done);
     }
   });
 
@@ -57,11 +57,25 @@ describe('PublicKey Model', () => {
       PublicKey.count({}, (err, count) => {
         assert.ifError(err);
         assert.equal(count, 1);
-        PublicKey.findByHash(randomKeyHash).then((key) => {
+        PublicKey.findById(randomKeyHash).then((key) => {
           assert.equal(key.key, randomKey);
           done();
-        }).catch(assert.ifError(err));
+        }).catch(done);
       });
+    }).catch(done);
+  });
+
+  it('Fail on key is not base64 format', (done) => {
+    const testString = new Buffer('test$$$$$$$');
+    const publicKey = new PublicKey({
+      key: testString
+    });
+    publicKey.save().catch(e => {
+      if (e.name === 'ValidationError' && e.message === 'PublicKey validation failed') {
+        done();
+      } else {
+        done(e);
+      }
     });
   });
 });

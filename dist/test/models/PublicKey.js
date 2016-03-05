@@ -27,7 +27,7 @@ describe('PublicKey Model', () => {
         _assert2.default.equal(count, 0);
         done();
       });
-    });
+    }).catch(done);
   });
 
   it('PublicKey creation', done => {
@@ -41,7 +41,7 @@ describe('PublicKey Model', () => {
         _assert2.default.equal(count, 1);
         done();
       });
-    }).catch(err => _assert2.default.ifError(err));
+    }).catch(done);
   });
 
   it('Multiple PublicKey creation', done => {
@@ -60,7 +60,7 @@ describe('PublicKey Model', () => {
       const testString = new Buffer(`test${ i }`).toString('base64');
       new _PublicKey2.default({
         key: testString
-      }).save().then(countedDone);
+      }).save().then(countedDone).catch(done);
     }
   });
 
@@ -72,11 +72,25 @@ describe('PublicKey Model', () => {
       _PublicKey2.default.count({}, (err, count) => {
         _assert2.default.ifError(err);
         _assert2.default.equal(count, 1);
-        _PublicKey2.default.findByHash(randomKeyHash).then(key => {
+        _PublicKey2.default.findById(randomKeyHash).then(key => {
           _assert2.default.equal(key.key, randomKey);
           done();
-        }).catch(_assert2.default.ifError(err));
+        }).catch(done);
       });
+    }).catch(done);
+  });
+
+  it('Fail on key is not base64 format', done => {
+    const testString = new Buffer('test$$$$$$$');
+    const publicKey = new _PublicKey2.default({
+      key: testString
+    });
+    publicKey.save().catch(e => {
+      if (e.name === 'ValidationError' && e.message === 'PublicKey validation failed') {
+        done();
+      } else {
+        done(e);
+      }
     });
   });
 });
