@@ -3,17 +3,18 @@ import assert from 'assert';
 import crypto from 'crypto';
 import PublicKey from '../../models/PublicKey';
 import { sha256sum } from '../../utils';
+const clearCollection = (done) => {
+  PublicKey.remove({}).then(() => {
+    PublicKey.count({}).then(count => {
+      assert.equal(count, 0);
+      done();
+    }).catch(done);
+  }).catch(done);
+};
 
 describe('PublicKey Model', () => {
-  beforeEach('Clear PublicKey collection', (done) => {
-    PublicKey.remove({}).then(() => {
-      PublicKey.count({}, (err, count) => {
-        assert.ifError(err);
-        assert.equal(count, 0);
-        done();
-      });
-    }).catch(done);
-  });
+  beforeEach('Clear PublicKey collection', clearCollection);
+  afterEach('Clear PublicKey collection', clearCollection);
 
   it('PublicKey creation', (done) => {
     const testString = (new Buffer('test')).toString('base64');

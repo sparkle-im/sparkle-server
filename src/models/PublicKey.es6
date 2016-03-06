@@ -23,7 +23,7 @@ const publicKeySchema = new mongoose.Schema({
       return key;
     }
   }
-}, { timestamps: { createdAt: 'created_at' } });
+});
 
 const PublicKey = mongoose.model('PublicKey', publicKeySchema);
 export default PublicKey;

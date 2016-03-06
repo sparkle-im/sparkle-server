@@ -14,11 +14,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const clearCollection = done => {
   _MessageCounter2.default.remove({}).then(() => {
-    _MessageCounter2.default.count({}, (err, count) => {
-      _assert2.default.ifError(err);
+    _MessageCounter2.default.count({}).then(count => {
       _assert2.default.equal(count, 0);
       done();
-    });
+    }).catch(done);
   }).catch(done);
 }; /* eslint-env node, mocha */
 

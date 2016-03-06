@@ -15,7 +15,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * Compute sha256sum for given buffer.
- * @param {Buffer|string} - A Buffer, however string is acceptable too.
+ * @param {Buffer|string} buffer - A Buffer, however string is acceptable too.
  * @return {string} sha256sum for buffer in hexstring.
  */
 function sha256sum(buffer) {

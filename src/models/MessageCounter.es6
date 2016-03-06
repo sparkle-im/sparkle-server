@@ -20,7 +20,7 @@ const messageCounterSchema = new mongoose.Schema({
     },
     default: 0
   }
-}, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
+});
 
 messageCounterSchema.statics.getNextMessageCountById = function getMessageCountById(id) {
   return new Promise((resolve, reject) => {

@@ -36,7 +36,7 @@ const publicKeySchema = new _mongoose2.default.Schema({
       return key;
     }
   }
-}, { timestamps: { createdAt: 'created_at' } });
+});
 
 const PublicKey = _mongoose2.default.model('PublicKey', publicKeySchema);
 exports.default = PublicKey;

@@ -4,11 +4,10 @@ import MessageCounter from '../../models/MessageCounter';
 import { sha256sum } from '../../utils';
 const clearCollection = (done) => {
   MessageCounter.remove({}).then(() => {
-    MessageCounter.count({}, (err, count) => {
-      assert.ifError(err);
+    MessageCounter.count({}).then(count => {
       assert.equal(count, 0);
       done();
-    });
+    }).catch(done);
   }).catch(done);
 };
 

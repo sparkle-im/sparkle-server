@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 /**
  * Compute sha256sum for given buffer.
- * @param {Buffer|string} - A Buffer, however string is acceptable too.
+ * @param {Buffer|string} buffer - A Buffer, however string is acceptable too.
  * @return {string} sha256sum for buffer in hexstring.
  */
 export function sha256sum(buffer) {

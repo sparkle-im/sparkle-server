@@ -18,17 +18,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /* eslint-env node, mocha */
 
+const clearCollection = done => {
+  _PublicKey2.default.remove({}).then(() => {
+    _PublicKey2.default.count({}).then(count => {
+      _assert2.default.equal(count, 0);
+      done();
+    }).catch(done);
+  }).catch(done);
+};
 
 describe('PublicKey Model', () => {
-  beforeEach('Clear PublicKey collection', done => {
-    _PublicKey2.default.remove({}).then(() => {
-      _PublicKey2.default.count({}, (err, count) => {
-        _assert2.default.ifError(err);
-        _assert2.default.equal(count, 0);
-        done();
-      });
-    }).catch(done);
-  });
+  beforeEach('Clear PublicKey collection', clearCollection);
+  afterEach('Clear PublicKey collection', clearCollection);
 
   it('PublicKey creation', done => {
     const testString = new Buffer('test').toString('base64');
