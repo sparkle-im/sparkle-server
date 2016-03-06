@@ -1,22 +1,39 @@
 {
   "name": "sparkle-server",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Experimental server for sparkle protocol.",
   "main": "index.js",
   "scripts": {
-    "test": "tsc && node index.js"
+    "test": "npm run build && npm run mocha",
+    "build": "babel src -d dist",
+    "start": "node dist/index.js",
+    "lint": "eslint src --ext es6",
+    "mocha": "mocha --recursive dist/test/"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sparkle-im/sparkle-server"
+    "url": "https://github.com/sparkle-im/sparkle-server/"
   },
-  "private": true,
+  "keywords": [
+    "im",
+    "node",
+    "javascript",
+    "encryption"
+  ],
   "author": "Edsger Lin",
   "license": "AGPL-3.0",
+  "devDependencies": {
+    "babel-cli": "^6.5.1",
+    "babel-preset-es2015-node4": "^2.0.3",
+    "eslint": "^2.2.0",
+    "eslint-config-airbnb": "^6.0.2",
+    "eslint-plugin-react": "^4.1.0",
+    "mocha": "^2.4.5"
+  },
   "dependencies": {
-    "body-parser": "^1.14.2",
-    "express": "^4.13.3",
-    "mongodb": "^2.1.4",
-    "multer": "^1.1.0"
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "mongoose": "^4.4.5",
+    "node-gcm": "^0.14.0"
   }
 }
