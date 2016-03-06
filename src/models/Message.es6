@@ -29,7 +29,7 @@ const messageSchema = new mongoose.Schema({
     }
   }
 
-}, { id: false });
+}, { id: false, timestamps: { createdAt: 'timestamp' } });
 
 messageSchema.pre('save', function preSaveHook(next) {
   MessageCounter.getNextMessageCountById(this.receiver).then(count => {

@@ -44,7 +44,7 @@ const messageSchema = new _mongoose2.default.Schema({
     }
   }
 
-}, { id: false });
+}, { id: false, timestamps: { createdAt: 'timestamp' } });
 
 messageSchema.pre('save', function preSaveHook(next) {
   _MessageCounter2.default.getNextMessageCountById(this.receiver).then(count => {
