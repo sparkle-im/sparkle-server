@@ -6,6 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 
 var _express = require('express');
 
+var _nodeGcm = require('node-gcm');
+
+var _nodeGcm2 = _interopRequireDefault(_nodeGcm);
+
 var _Message = require('../models/Message');
 
 var _Message2 = _interopRequireDefault(_Message);
@@ -13,6 +17,14 @@ var _Message2 = _interopRequireDefault(_Message);
 var _PublicKey = require('../models/PublicKey');
 
 var _PublicKey2 = _interopRequireDefault(_PublicKey);
+
+var _GCMToken = require('../models/GCMToken');
+
+var _GCMToken2 = _interopRequireDefault(_GCMToken);
+
+var _config = require('../config');
+
+var _config2 = _interopRequireDefault(_config);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26,8 +38,22 @@ router.post('/:receiver_id([0-9a-fA-F]{64})', (req, res) => {
       // Receiver exist and messages exist.
       const messagePromises = messages.map(message => new _Message2.default({ receiver, message }).save());
       Promise.all(messagePromises).then(values => {
-        const gcmSend = e => e; // TODO
-        gcmSend(values);
+        _GCMToken2.default.findById(receiver).then(doc => {
+          if (doc && doc.token) {
+            const token = doc.token;
+            const sender = new _nodeGcm2.default.Sender(_config2.default.GCM_API_KEY);
+            const message = new _nodeGcm2.default.Message();
+            const lastMessageId = values.sort((a, b) => a.messageId - b.messageId).pop().messageId;
+            message.addData('lastMessageId', lastMessageId);
+            sender.send(message, { registrationTokens: token }, (err, response) => {
+              if (err) {
+                console.error(`GCM Error: ${ err }`);
+              } else {
+                console.log(`GCM Sent: ${ response }`);
+              }
+            });
+          }
+        });
         sendStatus(res, 200)();
       }).catch(sendStatus(res, 404));
     } else {

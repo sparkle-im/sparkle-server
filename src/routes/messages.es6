@@ -1,6 +1,9 @@
 import { Router } from 'express';
+import gcm from 'node-gcm';
 import Message from '../models/Message';
 import PublicKey from '../models/PublicKey';
+import GCMToken from '../models/GCMToken';
+import config from '../config';
 const router = new Router();
 const sendStatus = (res, status) => () => res.sendStatus(status);
 router.post('/:receiver_id([0-9a-fA-F]{64})', (req, res) => {
@@ -14,8 +17,22 @@ router.post('/:receiver_id([0-9a-fA-F]{64})', (req, res) => {
       && messages.length >= 1) { // Receiver exist and messages exist.
       const messagePromises = messages.map(message => new Message({ receiver, message }).save());
       Promise.all(messagePromises).then(values => {
-        const gcmSend = e => e; // TODO
-        gcmSend(values);
+        GCMToken.findById(receiver).then(doc => {
+          if (doc && doc.token) {
+            const token = doc.token;
+            const sender = new gcm.Sender(config.GCM_API_KEY);
+            const message = new gcm.Message();
+            const lastMessageId = values.sort((a, b) => a.messageId - b.messageId).pop().messageId;
+            message.addData('lastMessageId', lastMessageId);
+            sender.send(message, { registrationTokens: token }, (err, response) => {
+              if (err) {
+                console.error(`GCM Error: ${err}`);
+              } else {
+                console.log(`GCM Sent: ${response}`);
+              }
+            });
+          }
+        });
         sendStatus(res, 200)();
       }).catch(sendStatus(res, 404));
     } else {
