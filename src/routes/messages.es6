@@ -8,23 +8,21 @@ const router = new Router();
 const sendStatus = (res, status) => () => res.sendStatus(status);
 router.post('/:receiver_id([0-9a-fA-F]{64})', (req, res) => {
   const receiver = req.params.receiver_id.toLowerCase();
-  const messages = req.body.messages;
+  const message = req.body.message;
   PublicKey.findById(receiver).then((key) => {
     if (key
       && key.key
-      && messages
-      && Array.isArray(messages)
-      && messages.length >= 1) { // Receiver exist and messages exist.
-      const messagePromises = messages.map(message => new Message({ receiver, message }).save());
-      Promise.all(messagePromises).then(values => {
+      && message) { // Receiver exist and message exist.
+      new Message({ receiver, message }).save().then(m => {
         GCMToken.findById(receiver).then(doc => {
           if (doc && doc.token) {
             const token = doc.token;
             const sender = new gcm.Sender(config.GCM_API_KEY);
-            const message = new gcm.Message();
-            const lastMessageId = values.sort((a, b) => a.messageId - b.messageId).pop().messageId;
-            message.addData('lastMessageId', lastMessageId);
-            sender.send(message, { registrationTokens: token }, (err, response) => {
+            const gcmMessage = new gcm.Message();
+            gcmMessage.addData('id', m.messageId);
+            gcmMessage.addData('message', m.message);
+            gcmMessage.addData('timestamp', m.timestamp);
+            sender.send(gcmMessage, { registrationTokens: token }, (err, response) => {
               if (err) {
                 console.error(`GCM Error: ${err}`);
               } else {
@@ -49,12 +47,15 @@ router.get('/:receiver_id([0-9a-fA-F]{64})', (req, res) => {
         const count = req.query.count;
         Message.getMessagesByReceiver(receiver, { since, count })
           .then(messages => {
-            res.send(messages
-              .map(message => ({
-                id: message.messageId,
-                message: message.message,
-                timestamp: message.timestamp
-              })));
+            res.send({
+              messages: messages
+                .map(message => ({
+                  id: message.messageId,
+                  message: message.message,
+                  timestamp: message.timestamp
+                }
+              ))
+            });
           }).catch(sendStatus(res, 404));
       } else {
         sendStatus(res, 404)();
